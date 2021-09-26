@@ -7,9 +7,13 @@ from models import GameIn, GameOut
 from config import Settings
 
 settings = Settings()
+
+# zmiana nazwy bazy dla testow
+if settings.testing:
+    settings.db_name = f"test_{settings.db_name}"
+
 client = motor.motor_asyncio.AsyncIOMotorClient(settings.mongo_dsn)
 app = FastAPI()
-
 
 def get_collection():
     return client[settings.db_name][settings.col]

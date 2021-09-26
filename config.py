@@ -1,3 +1,4 @@
+import os
 from pydantic import (
     AnyUrl,
     BaseSettings,
@@ -17,6 +18,9 @@ class Settings(BaseSettings):
     mongo_dsn - jest wymagane, pozostałe parametry
                 przyjmują domyslne wartości
     """
+    environment: str = os.getenv("ENVIRONMENT", "dev")
+    testing: bool = False
+
     mongo_dsn: MongoDsn
     db_name: str = 'mygames'
     col: str = 'games'
