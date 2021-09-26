@@ -42,7 +42,10 @@ async def delete_game(collection, game_id: str) -> bool:
     """
     Usuwa grę
     """
-    pass
+    result = collection.delete_one({'_id': ObjectId(game_id)})
+    print(result)
+    return result 
+
 
 async def get_all_games(collection) -> List[GameOut]:
     """

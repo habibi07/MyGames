@@ -31,3 +31,5 @@ async def test_get_all_games_use_case():
     changed_game = GameIn(name=new_game_name, producer='Blizzard')
     changed_game = await use_cases.save_game(collection, changed_game, added_game.id)
     assert changed_game.name == new_game_name
+
+    result = await use_cases.delete_game(collection, changed_game.id)
