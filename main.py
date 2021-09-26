@@ -1,9 +1,13 @@
+import motor.motor_asyncio
+
 from fastapi import FastAPI
 from typing import List
 from models import GameIn, GameOut
+from config import Settings
 
+settings = Settings()
+client = motor.motor_asyncio.AsyncIOMotorClient(settings.mongo_dsn)
 app = FastAPI()
-
 
 @app.get('/games/{game_id}', response_model=GameOut)
 async def get_game(game_id: str):
