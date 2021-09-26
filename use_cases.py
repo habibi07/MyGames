@@ -1,4 +1,5 @@
 from typing import List
+from bson.objectid import ObjectId
 from fastapi import HTTPException
 
 from models import GameIn, GameOut
@@ -18,14 +19,15 @@ async def insert_game(collection, game: GameIn) -> GameOut:
     Dodaje grę do kolekcji
     """
     gameOut = await collection.insert_one(game.dict())
-    newGame = await collection.find_one({'_id': gameOut.inserted_id})
-    return GameOut.from_mongo_result(newGame)
+    return await get_game_by_id(collection, str(gameOut.inserted_id))
+    #return GameOut.from_mongo_result(newGame)
 
 async def update_game(collection, game: GameIn, game_id: str) -> GameOut:
     """
     Aktualizuje istniejącą grę
     """
-    pass
+    await collection.replace_one({'_id': ObjectId(game_id)}, game.dict())
+    return await get_game_by_id(collection, game_id)
 
 async def save_game(collection, game: GameIn, game_id: str = None) -> GameOut:
     """

@@ -8,9 +8,10 @@ def pytest_namespace():
     return {'game': None}
 
 @pytest.fixture(scope='module', autouse=True)
-def fixture():
+def drop_db():
+    print('Drop')
     client.drop_database(settings.db_name)
-
+client.drop_database(settings.db_name)
 @pytest.fixture
 def post_game():
     game_name = 'World of Warcarft'
@@ -25,7 +26,7 @@ def post_game():
 def get_all():
     return api.get('/games/')
 
-def test_get_all_games_api(get_all):
+def test_get_all_games_api( get_all):
     assert get_all.status_code == 200
     assert get_all.json() == []
 
@@ -42,4 +43,5 @@ def test_insert_update_game_api(post_game):
     }
     update_response = api.put(f"/game/{game_id}", json=updated_game)
     assert update_response.status_code == 200
+
 
