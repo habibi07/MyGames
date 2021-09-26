@@ -1,4 +1,5 @@
 from typing import List
+from fastapi import HTTPException
 
 from models import GameIn, GameOut
 
@@ -7,7 +8,10 @@ async def get_game_by_id(collection, game_id: str) -> GameOut:
     Zwraca pojedyńczą grę na podstawie id lub wyrzuca błað gdy 
     gry nie znaleziono
     """
-    pass
+    document = await collection.find_one({'_id': ObjectId(game_id)})
+    if not document:
+        raise HTTPException(status_code=404, detail="Game not found")
+    return GameOut.from_mongo_result(document)
 
 async def insert_game(collection, game: GameIn) -> GameOut:
     """
