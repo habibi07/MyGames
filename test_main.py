@@ -3,15 +3,8 @@ import pytest
 from main import app, client, settings
 
 api = TestClient(app)
-
-def pytest_namespace():
-    return {'game': None}
-
-@pytest.fixture(scope='module', autouse=True)
-def drop_db():
-    print('Drop')
-    client.drop_database(settings.db_name)
 client.drop_database(settings.db_name)
+
 @pytest.fixture
 def post_game():
     game_name = 'World of Warcarft'
@@ -43,5 +36,14 @@ def test_insert_update_game_api(post_game):
     }
     update_response = api.put(f"/game/{game_id}", json=updated_game)
     assert update_response.status_code == 200
+    
+    all_games = api.get('/games/')
+    assert len(all_games.json()) == 1
+    
+    get_game = api.get(f"/games/{game_id}")
+    assert get_game.status_code == 200
+    assert get_game.json()['name'] == new_name
 
+    delete_response = api.delete(f"/game/{game_id}")
+    assert delete_response.status_code == 204
 

@@ -20,7 +20,6 @@ async def insert_game(collection, game: GameIn) -> GameOut:
     """
     gameOut = await collection.insert_one(game.dict())
     return await get_game_by_id(collection, str(gameOut.inserted_id))
-    #return GameOut.from_mongo_result(newGame)
 
 async def update_game(collection, game: GameIn, game_id: str) -> GameOut:
     """
@@ -38,13 +37,12 @@ async def save_game(collection, game: GameIn, game_id: str = None) -> GameOut:
     else:
         return await insert_game(collection, game) 
 
-async def delete_game(collection, game_id: str) -> bool:
+async def delete_game(collection, game_id: str):
     """
     Usuwa grę
     """
-    result = collection.delete_one({'_id': ObjectId(game_id)})
-    print(result)
-    return result 
+    result = await collection.delete_one({'_id': ObjectId(game_id)})
+    return bool(result.deleted_count)
 
 
 async def get_all_games(collection) -> List[GameOut]:
