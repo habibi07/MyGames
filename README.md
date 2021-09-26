@@ -11,5 +11,5 @@ uvicorn main:app --reload
 
 ### Testy uruchamia sie poleceniem
 ```bash
-pytest
+testing=true pytest
 ```
