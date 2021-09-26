@@ -42,6 +42,8 @@ async def delete_game(collection, game_id: str):
     Usuwa grę
     """
     result = await collection.delete_one({'_id': ObjectId(game_id)})
+    if not bool(result.deleted_count):
+        raise HTTPException(status_code=404, detail="Game not found")
     return bool(result.deleted_count)
 
 
