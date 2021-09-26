@@ -1,7 +1,6 @@
-from models import GameIn, GameOut
 from typing import List
-from fastapi import HTTPException
-from bson.objectid import ObjectId
+
+from models import GameIn, GameOut
 
 async def get_game_by_id(collection, game_id: str) -> GameOut:
     """
@@ -38,4 +37,5 @@ async def get_all_games(collection) -> List[GameOut]:
     """
     Zwraca listę gier
     """
-    pass
+    games = await collection.find({}).to_list(length=None)
+    return [GameOut.from_mongo_result(game) for game in games]
